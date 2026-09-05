@@ -2,15 +2,19 @@
 
 An end-to-end data science and machine learning project for forecasting daily realized revenue from historical Pakistani e-commerce sales data.
 
-## Overview
+## Live Demo
+
+🚀 **[Open the Live Streamlit Dashboard](https://pakistan-retail-revenue-forecasting-86uwkq6xstkz6exag5mvii.streamlit.app/)**
+
+## Project Overview
 
 This project transforms raw transaction-level e-commerce data into a daily revenue forecasting system.
 
-The workflow covers:
+The workflow includes:
 
 - data cleaning and validation
 - missing-value handling
-- successful-order filtering
+- order-status filtering
 - prevention of revenue double-counting
 - daily sales aggregation
 - time-series exploratory analysis
@@ -39,14 +43,14 @@ The raw data contains transaction-level information such as:
 
 The raw CSV is kept unchanged locally and is excluded from GitHub through `.gitignore`.
 
-## Data Preparation
+## Data Cleaning
 
 The main cleaning steps were:
 
 - removed completely empty rows
 - removed empty export columns
 - standardized column names
-- removed redundant fields
+- dropped redundant fields
 - converted order dates to datetime
 - handled missing values
 - filtered successful order statuses
@@ -63,11 +67,11 @@ The statuses treated as successful realized sales were:
 
 A key issue discovered during cleaning was that `grand_total` was repeated on every product row belonging to the same order. Revenue was therefore calculated only after reducing the data to one row per unique `increment_id`.
 
-## Time-Series Features
+## Time-Series Feature Engineering
 
 The final forecasting dataset contains calendar, lag, rolling, and volatility features.
 
-Main model features:
+The final model uses:
 
 - day of week
 - month
@@ -86,11 +90,11 @@ Main model features:
 - 30-day rolling revenue
 - 7-day revenue standard deviation
 
-Lagged and rolling features use only previous observations to avoid data leakage.
+Lagged and rolling features use only prior observations to avoid data leakage.
 
-## Modeling
+## Model Development
 
-The data was split chronologically rather than randomly so that the model was always evaluated on future data.
+The data was split chronologically rather than randomly so the model was evaluated on future observations.
 
 The following approaches were tested:
 
@@ -104,7 +108,7 @@ The strongest model was a **Random Forest Regressor trained on log-transformed d
 
 ## Final Model Performance
 
-Performance on the held-out test period:
+Performance on the held-out chronological test period:
 
 | Metric | Result |
 |---|---:|
@@ -116,7 +120,7 @@ The previous-day baseline produced an MAE of approximately **PKR 1.19 million**,
 
 ## Key Findings
 
-Recent revenue history was much more informative than simple calendar features.
+Recent revenue history was substantially more useful than simple calendar features.
 
 The most influential features included:
 
@@ -127,35 +131,35 @@ The most influential features included:
 
 The largest forecasting errors occurred around unusually large revenue spikes.
 
-Simple holiday and event flags produced almost no meaningful improvement, suggesting that many large spikes were probably driven by unavailable factors such as:
+Simple holiday and event flags produced negligible improvement, suggesting that major spikes were likely driven by unavailable factors such as:
 
 - promotions
 - advertising campaigns
 - flash sales
 - inventory changes
-- other retailer-specific events
+- retailer-specific events
 
 ## Visualizations
 
-### Actual vs Predicted Daily Revenue
+### Actual vs Predicted Revenue
 
-![Actual vs Predicted Daily Revenue](screenshots/actual_vs_predicted_daily_revenue2.png)
+![Actual vs Predicted Revenue](screenshots/actual_vs_predicted.png)
 
 ### Daily Revenue Over Time
 
-![Daily Revenue Over Time](screenshots/daily_revenue_over_time.png)
+![Daily Revenue Over Time](screenshots/daily_revenue.png)
 
 ### Daily Revenue with 7-Day Rolling Average
 
-![Daily Revenue with 7-Day Rolling Average](screenshots/daily_revenue_with_7-day_rolling_average.png)
+![Daily Revenue Rolling Average](screenshots/daily_revenue_rolling.png)
 
 ### Daily Orders Over Time
 
-![Daily Orders Over Time](screenshots/daily_orders_over_time.png)
+![Daily Orders Over Time](screenshots/daily_orders.png)
 
 ### Daily Orders with 7-Day Rolling Average
 
-![Daily Orders with 7-Day Rolling Average](screenshots/daily_orders_with_7-day_rolling_average.png)
+![Daily Orders Rolling Average](screenshots/daily_orders_rolling.png)
 
 ## Streamlit Dashboard
 
@@ -196,11 +200,11 @@ e-commerce_project/
 │   ├── data_cleaning.ipynb
 │   └── model_evaluation.ipynb
 └── screenshots/
-    ├── actual_vs_predicted_daily_revenue2.png
-    ├── daily_orders_over_time.png
-    ├── daily_orders_with_7-day_rolling_average.png
-    ├── daily_revenue_over_time.png
-    └── daily_revenue_with_7-day_rolling_average.png
+    ├── actual_vs_predicted.png
+    ├── daily_orders.png
+    ├── daily_orders_rolling.png
+    ├── daily_revenue.png
+    └── daily_revenue_rolling.png
 ```
 
 ## Tech Stack
@@ -213,12 +217,12 @@ e-commerce_project/
 - Joblib
 - Streamlit
 - Jupyter Notebook
+- Git
+- GitHub
 
 ## Limitations
 
-The model does not have access to detailed promotional and operational data.
-
-This limits its ability to forecast sudden extreme spikes in revenue.
+The model does not have access to detailed promotional and operational data, which limits its ability to forecast sudden extreme spikes in revenue.
 
 Other limitations include:
 
@@ -235,12 +239,13 @@ Potential improvements include:
 
 - category-level demand forecasting
 - promotion and campaign features
-- XGBoost or LightGBM comparison
+- comparison with XGBoost or LightGBM
 - time-series cross-validation
 - prediction intervals
 - additional external economic features
-- public Streamlit deployment
+- richer event and campaign data
+- model monitoring and retraining workflow
 
 ## Repository
 
-GitHub: https://github.com/massabibrahim13/pakistan-retail-revenue-forecasting
+**GitHub:** https://github.com/massabibrahim13/pakistan-retail-revenue-forecasting
